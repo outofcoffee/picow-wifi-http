@@ -1,0 +1,23 @@
+{
+  "name": "picow-wifi-http",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "mkdir -p dist && kaluma bundle ./index.js -o dist/bundle.js",
+    "deploy": "npm run bundle && npm run flash:headless",
+    "flash:headless": "kaluma flash dist/bundle.js",
+    "flash:shell": "kaluma flash dist/bundle.js --shell",
+    "start": "npm run bundle && npm run flash:shell",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "buffer": "^6.0.3"
+  },
+  "devDependencies": {
+    "@kaluma/cli": "^1.4.0"
+  }
+}

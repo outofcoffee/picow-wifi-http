@@ -1,0 +1,10 @@
+.idea/
+*.iml
+node_modules/
+dist/
+
+# Ignore the firmware
+*.uf2
+
+# Ignore wifi settings
+wifi.json
