@@ -14,9 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "buffer": "^6.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@kaluma/cli": "^1.4.0"
   }

@@ -1,7 +1,6 @@
 const WiFi = require('wifi').WiFi;
 const http = require('http');
 const { PicoCYW43 } = require('pico_cyw43');
-const Buffer = require('buffer/').Buffer
 const wifiConfig = require('./wifi.json');
 
 const pico_cyw43 = new PicoCYW43();
@@ -42,8 +41,9 @@ function sendRequest() {
         }
     };
 
+    const decoder = new TextDecoder();
     let responseContentLength = 0;
-    let body = [];
+    let body = '';
 
     const checkFinished = () => {
         let percent = 0;
@@ -56,9 +56,7 @@ function sendRequest() {
         }
         console.log('Response finished');
         pico_cyw43.putGpio(0, false);
-
-        const buf = Buffer.from(body);
-        console.log(buf.toString());
+        console.log(body);
     }
 
     const req = http.request(options, (res) => {
@@ -68,13 +66,24 @@ function sendRequest() {
         responseContentLength = parseInt(res.headers['content-length'], 10);
 
         res.on('data', (chunk) => {
-            console.log(`Received ${chunk.length} bytes of data.`);
-            body.push(...chunk);
-            //console.log(`BODY: ${chunk}`);
-            checkFinished();
+            try {
+                console.log(`Received ${chunk.length} bytes of data.`);
+                const decoded = decoder.decode(chunk);
+                body += decoded;
+                // console.log(`BODY: ${chunk}`);
+                checkFinished();
+            } catch (e) {
+                console.error(e);
+            }
+        });
+        res.on('close', () => {
+            console.log('Response closed.');
         });
         res.on('end', () => {
             console.log('No more data in response.');
+        });
+        res.on('error', (e) => {
+            console.error('Response error.', e);
         });
     });
 
@@ -88,6 +97,5 @@ function sendRequest() {
 
     // Finish the request
     req.end();
-
     console.log('Request sent');
 }
