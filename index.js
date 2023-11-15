@@ -3,17 +3,20 @@ const http = require('http');
 const { PicoCYW43 } = require('pico_cyw43');
 const wifiConfig = require('./wifi.json');
 
+const { LED } = require('led');
+const led = new LED(15);
+
 const pico_cyw43 = new PicoCYW43();
 
 connectToNetwork(wifiConfig);
 
 function connectToNetwork(wifiConfig) {
     console.log(`Connecting to Wi-Fi network: ${wifiConfig.ssid}`);
-    pico_cyw43.putGpio(0, true);
+    setLed(true);
 
     const wifi = new WiFi();
     wifi.connect(wifiConfig, (err) => {
-        pico_cyw43.putGpio(0, false);
+        setLed(false);
 
         if (err) {
             console.error(err);
@@ -26,7 +29,7 @@ function connectToNetwork(wifiConfig) {
 
 function sendRequest() {
     console.log('Sending request');
-    pico_cyw43.putGpio(0, true);
+    setLed(true);
 
     const host = 'example.com';
     const port = 80;
@@ -55,7 +58,7 @@ function sendRequest() {
             return;
         }
         console.log('Response finished');
-        pico_cyw43.putGpio(0, false);
+        setLed(false);
         console.log(body);
     }
 
@@ -98,4 +101,12 @@ function sendRequest() {
     // Finish the request
     req.end();
     console.log('Request sent');
+}
+
+/**
+ * @param {boolean} state
+ */
+function setLed(state) {
+    //pico_cyw43.putGpio(0, state);
+    state ? led.on() : led.off();
 }

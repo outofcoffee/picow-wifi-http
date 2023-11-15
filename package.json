@@ -8,6 +8,7 @@
     "deploy": "npm run bundle && npm run flash:headless",
     "flash:headless": "kaluma flash dist/bundle.js",
     "flash:shell": "kaluma flash dist/bundle.js --shell",
+    "shell": "kaluma shell",
     "start": "npm run bundle && npm run flash:shell",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
